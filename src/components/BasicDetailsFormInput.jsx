@@ -14,33 +14,33 @@ const BasicDetailsFormInput = ({ basicDetails, formIndex, handleBasicChange }) =
   return (
    <>
    <div className="basic-details">
-    <h2>Basic Details</h2>
+    <h2>Personal Details</h2>
     <div className="form-group">
       <Input
-        placeholder="Name"
-        value={basicDetails.name}
+        placeholder="Enter Your Name"
+        value={basicDetails?.name}
         onChange={(e) => handleBasicChange(formIndex, 'name', e.target.value)}
       />
       <Input
         type="email"
-        placeholder="Email"
-        value={basicDetails.email}
+        placeholder="Enter Your Email"
+        value={basicDetails?.email}
         onChange={(e) => handleBasicChange(formIndex, 'email', e.target.value)}
       />
       <Input
         type="tel"
-        placeholder="Phone Number"
-        value={basicDetails.phone}
+        placeholder="Enter Your Phone Number"
+        value={basicDetails?.phone}
         onChange={(e) => handleBasicChange(formIndex, 'phone', e.target.value)}
       />
       <Input
         type="number"
-        placeholder="Age"
-        value={basicDetails.age}
+        placeholder="Enter Your Age"
+        value={basicDetails?.age}
         onChange={(e) => handleBasicChange(formIndex, 'age', e.target.value)}
       />
       <Select
-        value={basicDetails.gender}
+        value={basicDetails?.gender}
         onChange={(value) => handleBasicChange(formIndex, 'gender', value)}
       >
         {Gender_Option .map(option => (

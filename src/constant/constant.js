@@ -14,6 +14,12 @@ export const INITIAL_BASIC_DETAILS = {
     country: '',
     zipCode: '',
   };
+  export const INITIAL_FORM = {
+    id: '',
+    formName: 'Form 1', 
+    basicDetails: { ...INITIAL_BASIC_DETAILS },
+    addresses: [{ ...INITIAL_ADDRESS }],
+  };
   
   export const Gender_Option = [
     { value: '', label: 'Select Gender' },

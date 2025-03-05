@@ -1,0 +1,46 @@
+.form-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.main-div {
+  border: 1px solid #d9d9d9;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+}
+
+.main-div-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.main-div-header h2 {
+  margin: 0;
+  padding: 4px 8px;
+}
+
+.main-div-header h2.editable {
+  border: 1px solid #1890ff;
+  border-radius: 4px;
+  outline: none;
+  background-color: #f5f5f5;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.address-section {
+  margin-top: 20px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
