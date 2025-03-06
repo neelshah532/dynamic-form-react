@@ -14,11 +14,11 @@ const AdressDetailsFormInput = ({
 }) => (
   <div className="address-details-container">
     {addressIndex === 0 && (
-      <Button onClick={() => {
-        addNewAddress(formIndex)
-
-      }} className="add-address-btn">
-       <FaPlus /> Add Address
+      <Button 
+        onClick={() => addNewAddress(formIndex)} 
+        className="add-address-btn"
+      >
+        <FaPlus /> Add Address
       </Button>
     )}
     <div className="address-details">

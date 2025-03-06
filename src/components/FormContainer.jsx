@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button } from 'antd';
+import { Button, Form } from 'antd';
 import { v4 as generateUniqueId } from 'uuid';
 import "../styles/FormContainer.css"
 import { INITIAL_ADDRESS, INITIAL_BASIC_DETAILS } from '../constant/constant';
@@ -10,11 +10,10 @@ import { FaPlus  } from 'react-icons/fa6';
 import { v4 as uuidv4 } from 'uuid'; 
 
 const FormContainer = () => {
-  const [formCollections, setFormCollections] = useState([
-    createNewFormTemplate()
-  ]);
-  
+  const [formCollections, setFormCollections] = useState([createNewFormTemplate()]);
   const [activeNameEditIndex, setActiveNameEditIndex] = useState(null);
+  const form = Form.useForm()[0];
+
   function  createNewFormTemplate() {
     return {
       id:  uuidv4(),
@@ -64,28 +63,28 @@ const FormContainer = () => {
     });
   };
 
-  // Add a new address in there particular form
   const addNewAddress = (formIndex) => {
     setFormCollections(previousForms => {
-      console.log("Add Address", previousForms);
       const updatedForms = [...previousForms];
-      updatedForms[formIndex].addresses.push({ ...INITIAL_ADDRESS });
-      console.log(updatedForms)
+      if (updatedForms[formIndex]) {
+        updatedForms[formIndex] = {
+          ...updatedForms[formIndex],
+          addresses: [...updatedForms[formIndex].addresses, { ...INITIAL_ADDRESS }]
+        };
+      }
       return updatedForms;
     });
   };
 
-  // Remove an address from there perticular form
   const removeAddress = (formIndex, addressIndex) => {
     setFormCollections(previousForms => {
       const updatedForms = [...previousForms];
-      const currentAddresses = updatedForms[formIndex].addresses;
-      
-      // if i want atleast one address
-      if (currentAddresses.length > 1 && addressIndex > 0) {
-        currentAddresses.splice(addressIndex, 1);
+      if (updatedForms[formIndex] && updatedForms[formIndex].addresses.length > 1) {
+        updatedForms[formIndex] = {
+          ...updatedForms[formIndex],
+          addresses: updatedForms[formIndex].addresses.filter((_, index) => index !== addressIndex)
+        };
       }
-      
       return updatedForms;
     });
   };
@@ -121,7 +120,7 @@ const FormContainer = () => {
   };
 
   return (
-    <div className="form-container">
+    <Form form={form} layout="vertical" className="form-container">
       {formCollections.map((form, formIndex) => (
         <div key={form.id} className="main-form-section">
           {/* Editable  header name*/}
@@ -178,7 +177,7 @@ const FormContainer = () => {
           Submit All Forms
         </Button>
       </div>
-    </div>
+    </Form>
   );
 };
 

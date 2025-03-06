@@ -14,6 +14,7 @@ export const INITIAL_BASIC_DETAILS = {
     country: '',
     zipCode: '',
   };
+  
   export const INITIAL_FORM = {
     id: '',
     formName: 'Form 1', 
