@@ -1,67 +1,31 @@
 .basic-details {
-    margin-bottom: 25px;
-    padding-bottom: 20px;
-    border-bottom: 1px dashed #e8e8e8;
-    
-  }
-  
-  .basic-details h2 {
-    font-size: 20px;
-    font-weight: 600;
-    color: #1890ff;
-    margin-bottom: 20px;
-    position: relative;
-    padding-left: 15px;
-  }
-  
-  .basic-details h2::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
-    width: 4px;
-    background-color: #1890ff;
-    border-radius: 2px;
-  }
-  
-  .basic-details .form-group {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-  }
-  
-  .basic-details .form-group .ant-input,
-  .basic-details .form-group .ant-select {
-    height: 40px;
-    border-radius: 6px;
-    transition: all 0.3s;
-  }
-  
-  .basic-details .form-group .ant-input:hover,
-  .basic-details .form-group .ant-select:hover {
-    border-color: #40a9ff;
-  }
-  
-  .basic-details .form-group .ant-input:focus,
-  .basic-details .form-group .ant-select-focused .ant-select-selector {
-    border-color: #1890ff;
-    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
-  }
-  
-  .basic-details .form-group .ant-input::placeholder {
-    color: #bfbfbf;
-  }
-  
-  /* Make the gender select take full width */
-  .basic-details .form-group .ant-select {
-    width: 100%;
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .basic-details .form-group {
-      grid-template-columns: 1fr;
-      gap: 12px;
-    }
-  }
+  margin-bottom: 25px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--dark-border);
+}
+
+.basic-details h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--dark-accent);
+  margin-bottom: 20px;
+  position: relative;
+  padding-left: 15px;
+}
+
+.basic-details h2::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  background-color: var(--dark-accent);
+  border-radius: 2px;
+}
+
+.basic-details .form-group {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}

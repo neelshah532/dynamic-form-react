@@ -1,5 +1,5 @@
 export const INITIAL_BASIC_DETAILS = {
-    name: '',
+  username: '',
     email: '',
     phone: '',
     age: '',

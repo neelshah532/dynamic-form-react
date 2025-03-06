@@ -1,22 +1,23 @@
 import React, { useState } from 'react';
 import { Button, Form } from 'antd';
 import { v4 as generateUniqueId } from 'uuid';
-import "../styles/FormContainer.css"
+import "../styles/FormContainer.css";
 import { INITIAL_ADDRESS, INITIAL_BASIC_DETAILS } from '../constant/constant';
 import BasicDetailsFormInput from './BasicDetailsFormInput';
 import AdressDetailsFormInput from './AdressDetailsFormInput';
 import { MdDelete } from 'react-icons/md';
-import { FaPlus  } from 'react-icons/fa6';
-import { v4 as uuidv4 } from 'uuid'; 
+import { FaPlus } from 'react-icons/fa6';
 
 const FormContainer = () => {
-  const [formCollections, setFormCollections] = useState([createNewFormTemplate()]);
+  const [formCollections, setFormCollections] = useState([
+    createNewFormTemplate(),
+  ]);
   const [activeNameEditIndex, setActiveNameEditIndex] = useState(null);
-  const form = Form.useForm()[0];
+  const [form] = Form.useForm();
 
-  function  createNewFormTemplate() {
+  function createNewFormTemplate() {
     return {
-      id:  uuidv4(),
+      id: generateUniqueId(),
       name: generateFormName(),
       basicDetails: { ...INITIAL_BASIC_DETAILS },
       addresses: [{ ...INITIAL_ADDRESS }],
@@ -27,36 +28,78 @@ const FormContainer = () => {
     return `Form-${generateUniqueId().slice(0, 8)}`;
   }
 
-  //this is for add new form
   const addNewForm = () => {
-    setFormCollections(previousForms => [
-      ...previousForms, 
-      createNewFormTemplate()
-    ]);
+    setFormCollections((previousForms) => {
+      const newForm = createNewFormTemplate();
+      const newForms = [...previousForms, newForm];
+      
+      const currentValues = form.getFieldsValue();
+ 
+      form.setFieldsValue({
+        forms: [
+          ...(currentValues.forms || previousForms),
+          {
+            ...newForm,
+            basicDetails: { ...newForm.basicDetails },
+            addresses: [...newForm.addresses],
+          }
+        ]
+      });
+      
+      return newForms;
+    });
   };
-
-  // Remove a form from the from form array
-  const removeForm = (formIndex) => {
-    // Prevent to remove the first index form
-    if (formIndex === 0) return;
+  // const removeForm = (formIndex) => {
+  //   if (formIndex === 0) return;
     
-    setFormCollections(previousForms => 
-      previousForms.filter((_, index) => index !== formIndex)
-    );
+  //   setFormCollections((previousForms) => {
+  //     const newForms = previousForms.filter((_, index) => index !== formIndex);
+  //     const currentValues = form.getFieldsValue();
+  //     console.log('currentValues', currentValues);
+  //     console.log('newForms', newForms);
+  //     console.log('formIndex', formIndex);
+  //     if (currentValues.forms) {
+  //       const updatedForms = currentValues.forms.filter((_, index) => index !== formIndex);
+  //       form.setFieldsValue({
+  //         forms: updatedForms
+  //       });
+  //     }
+      
+  //     return newForms;
+  //   });
+  // };
+  const removeForm = (formIndex) => {
+    if (formIndex === 0) return;
+  
+    setFormCollections((previousForms) => {
+      const newForms = previousForms.filter((_, index) => index !== formIndex);
+  
+      const currentValues = form.getFieldsValue();
+      
+      // Filter out the removed form in form field values
+      const updatedForms = currentValues.forms
+        ? currentValues.forms.filter((_, index) => index !== formIndex)
+        : [];
+  
+      form.setFieldsValue({
+        forms: updatedForms,
+      });
+  
+      return newForms;
+    });
   };
+  
 
-  // Update basic details a particular speciifiic form
   const updateBasicDetails = (formIndex, field, value) => {
-    setFormCollections(previousForms => {
+    setFormCollections((previousForms) => {
       const updatedForms = [...previousForms];
       updatedForms[formIndex].basicDetails[field] = value;
       return updatedForms;
     });
   };
 
-  // Update address details for a specifically  form and addrtess
   const updateAddressDetails = (formIndex, addressIndex, field, value) => {
-    setFormCollections(previousForms => {
+    setFormCollections((previousForms) => {
       const updatedForms = [...previousForms];
       updatedForms[formIndex].addresses[addressIndex][field] = value;
       return updatedForms;
@@ -64,12 +107,15 @@ const FormContainer = () => {
   };
 
   const addNewAddress = (formIndex) => {
-    setFormCollections(previousForms => {
+    setFormCollections((previousForms) => {
       const updatedForms = [...previousForms];
       if (updatedForms[formIndex]) {
         updatedForms[formIndex] = {
           ...updatedForms[formIndex],
-          addresses: [...updatedForms[formIndex].addresses, { ...INITIAL_ADDRESS }]
+          addresses: [
+            ...updatedForms[formIndex].addresses,
+            { ...INITIAL_ADDRESS }, 
+          ],
         };
       }
       return updatedForms;
@@ -77,71 +123,84 @@ const FormContainer = () => {
   };
 
   const removeAddress = (formIndex, addressIndex) => {
-    setFormCollections(previousForms => {
+    setFormCollections((previousForms) => {
       const updatedForms = [...previousForms];
       if (updatedForms[formIndex] && updatedForms[formIndex].addresses.length > 1) {
+        const newAddresses = updatedForms[formIndex].addresses.filter(
+          (_, index) => index !== addressIndex
+        );
         updatedForms[formIndex] = {
           ...updatedForms[formIndex],
-          addresses: updatedForms[formIndex].addresses.filter((_, index) => index !== addressIndex)
-        };
+          addresses: newAddresses,
+        };       
+        form.setFieldsValue({
+          forms: updatedForms.map((f, idx) =>
+            idx === formIndex ? { ...f, addresses: newAddresses } : f
+          ),
+        });
       }
       return updatedForms;
     });
   };
 
-  // this function is for handle the form name edit
   const handleFormNameEdit = (formIndex, event) => {
     const newName = event.target.textContent.trim() || generateFormName();
-    
-    setFormCollections(previousForms => {
+    setFormCollections((previousForms) => {
       const updatedForms = [...previousForms];
       updatedForms[formIndex].name = newName;
       return updatedForms;
     });
   };
 
-  // button for trigger the editable text event
   const toggleNameEditing = (formIndex) => {
     setActiveNameEditIndex(
       activeNameEditIndex === formIndex ? null : formIndex
     );
   };
 
-  // Submit data
   const submitFormData = () => {
-    const formattedSubmissionData = formCollections.map(form => ({
-      [form.name]: {
-        basicDetails: form.basicDetails,
-        addresses: form.addresses,
-      },
-    }));
-    
-    console.log("Form Data:", formattedSubmissionData);
+    form
+      .validateFields()
+      .then(() => {
+        const formattedSubmissionData = formCollections.map((form) => ({
+          [form.name]: {
+            basicDetails: form.basicDetails,
+            addresses: form.addresses,
+          },
+        }));
+        console.log("Form Data:", formattedSubmissionData);
+      })
+      .catch((errorInfo) => {
+        console.log("Validation Failed:", errorInfo);
+      });
   };
-
   return (
     <Form form={form} layout="vertical" className="form-container">
       {formCollections.map((form, formIndex) => (
         <div key={form.id} className="main-form-section">
-          {/* Editable  header name*/}
           <div className="form-header">
             <h2
               contentEditable={activeNameEditIndex === formIndex}
               suppressContentEditableWarning={true}
               onBlur={(e) => handleFormNameEdit(formIndex, e)}
-              className={activeNameEditIndex === formIndex ? 'name-editing-mode' : ''}
+              style={{
+                padding: '4px 8px',
+                border: activeNameEditIndex === formIndex ? '2px solid #1890ff' : '1px solid transparent',
+                backgroundColor: activeNameEditIndex === formIndex ? '#e6f7ff' : 'transparent',
+                borderRadius: '4px',
+                display: 'inline-block',
+                outline: 'none',
+              }}
             >
               {form.name}
             </h2>
-            
             <div className="header-actions">
               <Button onClick={() => toggleNameEditing(formIndex)}>
                 {activeNameEditIndex === formIndex ? 'Save Name' : 'Edit Name'}
               </Button>
-              
               {formIndex > 0 && (
                 <Button danger onClick={() => removeForm(formIndex)}>
-                   <MdDelete /> Remove Form
+                  <MdDelete /> Remove Form
                 </Button>
               )}
             </div>
@@ -151,7 +210,6 @@ const FormContainer = () => {
             formIndex={formIndex}
             handleBasicChange={updateBasicDetails}
           />
-
           <div className="address-section">
             {form.addresses.map((address, addressIndex) => (
               <AdressDetailsFormInput
@@ -168,10 +226,9 @@ const FormContainer = () => {
           </div>
         </div>
       ))}
-      
       <div className="form-actions">
         <Button type="primary" onClick={addNewForm}>
-        <FaPlus  />  Add New Form
+          <FaPlus /> Add New Form
         </Button>
         <Button type="primary" onClick={submitFormData}>
           Submit All Forms
